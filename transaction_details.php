@@ -1,5 +1,5 @@
 <?php 
-session_start();
+//session_start();
 //include 'check_session.php'; 
 include 'commonfunction.php';  
 $id = $_GET['id'];   
@@ -123,10 +123,10 @@ if( $id > '0'){
                                     <div class="row align-items-center">
                                         <div class="col-xl-12 order-2 order-xl-1">
                                             <div class="form-group m-form__group row align-items-center">                                                       
-                                                <div class="col-md-3">
+                                               <!-- <div class="col-md-3">
                                                     <input type="text" class="form-control m-input m-input--air" autocomplete="off" name="first_name"  placeholder="First Name" title="First Name" id="first_name">
                                                     <div class="d-md-none m--margin-bottom-10"></div>
-                                                </div>
+                                                </div>-->
 
                                                 <div class="col-md-3">
                                     <div class='input-group date' ><!-- id='m_daterangepicker_6' -->
@@ -358,18 +358,30 @@ var r,t;
                         ]
                     }),
                      e = t.getDataSourceQuery();       
-                $("#category_id").on("change", function () {
+                $("#joining_date").daterangepicker({
+                buttonClasses: "m-btn btn",
+                applyClass: "btn-primary",
+                cancelClass: "btn-secondary",
+                autoUpdateInput: false,
+                    singleDatePicker: true,
+                opens: 'left',
+
+                ranges: {Today: [moment(), moment()],
+                    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                    "Last 7 Days": [moment().subtract(6, "days"), moment()],
+                    "Last 30 Days": [moment().subtract(29, "days"), moment()],
+                    "This Month": [moment().startOf("month"), moment().endOf("month")],
+                    "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]}}, );
+
+            $('#joining_date').on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('DD-MM-YYYY'));
                 var e = t.getDataSourceQuery();
-                e.category_id = $(this).val(), t.setDataSourceQuery(e), t.load()
-                }).val(e.category_id), 
-                $("#subcategory_id").on("change", function () {
-                var e = t.getDataSourceQuery();
-                e.subcategory_id = $(this).val(), t.setDataSourceQuery(e), t.load()
-               }).val(e.subcategory_id), 
-                $("#header_id").on("change", function () {
-                var e = t.getDataSourceQuery();
-                e.header_id = $(this).val(), t.setDataSourceQuery(e), t.load()
-                }).val(e.header_id),
+                e.joining_date = $(this).val(), t.setDataSourceQuery(e), t.load()
+            });
+
+            $('#joining_date').on('cancel.daterangepicker', function () {
+                $(this).val('');
+            });
                  $('#reset_id').on("click",function(){       
                         $("#category_id").selectpicker('deselectAll');
                         $("#subcategory_id").selectpicker('deselectAll');
